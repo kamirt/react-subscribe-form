@@ -4,16 +4,29 @@ import './App.css';
 import utils from './Utils.js';
 
 const cityList = ['Novokuznetsk', 'Novosibirsk', 'Berminham', 'London', 'Berlin', 'Moscow', 'Warsaw', 'Prague', 'New York'];
+let cityChanged = [];
+let showCityTips = false;
 
-function handleCityInput(input){
+function handleCityInput (input) {
   let val = input.target.value;
+
   let filteredCities = utils.arrSearch(cityList, val);
-  console.log(filteredCities)
+  cityChanged = filteredCities;
 }
 
-function sendForm(e){
+function sendForm (e) {
   e.preventDefault();
-  console.log('sendingForm')
+  setTimeout(function(){
+    alert('отправлено')
+  }, 500);
+}
+
+function CityTips (props) {
+  let cities = props.cities;
+  console.log(cities)
+  return <ul style={{listStyle: 'none'}}>
+    { cities.map(function(el, i){ return <li key={i}>{el}</li> }) }
+  </ul>
 }
 
 class App extends Component {
@@ -25,6 +38,7 @@ class App extends Component {
         </header>
         <div className="app-content">
           <input onInput={handleCityInput} className="app-content__input" />
+           <CityTips cities={ cityChanged }/>
         </div>
         <button onClick={sendForm}>Btn</button>
       </div>
