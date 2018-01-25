@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import CityList from './Components/CityList.js'
 import './App.css';
 import utils from './Utils.js';
 
-const cityList = ['Novokuznetsk', 'Novosibirsk', 'Berminham', 'London', 'Berlin', 'Moscow', 'Warsaw', 'Prague', 'New York'];
-let cityChanged = [];
-let showCityTips = false;
 
-function handleCityInput (input) {
-  let val = input.target.value;
-
-  let filteredCities = utils.arrSearch(cityList, val);
-  cityChanged = filteredCities;
-}
 
 function sendForm (e) {
   e.preventDefault();
@@ -21,15 +12,19 @@ function sendForm (e) {
   }, 500);
 }
 
-function CityTips (props) {
-  let cities = props.cities;
-  console.log(cities)
-  return <ul style={{listStyle: 'none'}}>
-    { cities.map(function(el, i){ return <li key={i}>{el}</li> }) }
-  </ul>
-}
-
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      cityList: ['Novokuznetsk', 'Novosibirsk', 'Berminham', 'London', 'Berlin', 'Moscow', 'Warsaw', 'Prague', 'New York'],
+      filteredCL: [],
+    }
+  }
+  handleCityInput (input) {
+    let val = input.target.value;
+    let filteredCities = utils.arrSearch(this.state.cityList, val);
+    this.setState({ filteredCL: filteredCities });
+  }
   render() {
     return (
       <div className="app">
@@ -37,8 +32,8 @@ class App extends Component {
           <span>header</span>
         </header>
         <div className="app-content">
-          <input onInput={handleCityInput} className="app-content__input" />
-           <CityTips cities={ cityChanged }/>
+          <input onInput={ this.handleCityInput.bind(this) } className="app-content__input" />
+           <CityList cities={this.state.filteredCL} />
         </div>
         <button onClick={sendForm}>Btn</button>
       </div>
