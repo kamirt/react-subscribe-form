@@ -28,15 +28,15 @@ export default class CityList extends Component {
 
   render(){
     let me = this;
+    function createMarkup (item) { return {__html: item}};
     return (
       this.props.professions.length
       ? <ul className="registration__input drop-list">
           { this.state.profList.map(function(el, i) {
-            function createMarkup(item) { return {__html: item}};
             return <li onClick={me.choosen.bind(me, i)}
-                      className="drop-list__item"
-                      key={i}
-                      dangerouslySetInnerHTML={createMarkup(el)} />
+                className="drop-list__item"
+                key={i}
+                dangerouslySetInnerHTML={createMarkup(el)} />
             })
           }
         </ul>

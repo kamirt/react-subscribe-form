@@ -5,45 +5,51 @@ import utils from './Utils.js';
 
 class App extends Component {
 
+  static defaultProps = {
+    profList: [
+     'Парикмахер',
+     'Водитель',
+     'Бармен',
+     'Повар',
+     'Программист',
+     'Репетитор',
+     'Строитель',
+     'Кондитер',
+     'Медсестра',
+    ],
+    countryList: [
+      {flag: 'http://' + window.location.host + '/static/img/russia.jpg', code: '+7', mask: '000 000000'},
+      {flag: 'http://' + window.location.host + '/static/img/germany.jpg', code: '+49', mask: '000 000000'},
+      {flag: 'http://' + window.location.host + '/static/img/armenia.jpg', code: '+374', mask: '000 000000'}
+    ],
+  }
+
   constructor(props){
     super(props)
     this.state = {
-      profList: [
-       'Парикмахер',
-       'Водитель',
-       'Бармен',
-       'Повар',
-       'Программист',
-       'Репетитор',
-       'Строитель',
-       'Кондитер',
-       'Медсестра',
-      ],
       filteredCL: [],
       profession: '',
-      // maybe its not great, but in this case
       country: null,
-      countryList: [
-        {flag: 'https://' + window.location.host + '/static/img/russia.jpg', code: '+7', mask: '000 000000'},
-        {flag: 'https://' + window.location.host + '/static/img/germany.jpg', code: '+49', mask: '000 000000'},
-        {flag: 'https://' + window.location.host + '/static/img/armenia.jpg', code: '+374', mask: '000 000000'}
-      ],
       showCountry: false,
       phone: '',
     }
   }
 
   componentWillMount () {
-    this.setState({country: this.state.countryList[0]});
-    this.setState({phone: this.state.countryList[0].code});
+    this.setState({
+      country: this.props.countryList[0],
+      phone: this.props.countryList[0].code
+    });
   }
 
   handleCityInput (input) {
     // filters list of professions
     let val = input.target.value;
-    let filteredProfs = utils.arrSearch(this.state.profList, val);
-    this.setState({ filteredCL: filteredProfs });
-    this.setState({profession: val});
+    let filteredProfs = utils.arrSearch(this.props.profList, val);
+    this.setState({
+      filteredCL: filteredProfs,
+      profession: val
+    });
   }
 
   sendForm (e) {
@@ -55,17 +61,24 @@ class App extends Component {
   }
 
   onProfChoice (choice) {
-    this.setState({profession: choice});
-    this.setState({filteredCL: []});
+    this.setState({
+      profession: choice,
+      filteredCL: []
+    });
   }
 
   toggleCountry (i) {
-    let country = this.state.countryList[i];
-    this.setState({country: country});
-    if(this.state.showCountry){
-      this.setState({phone: country.code});
-    }
-    this.setState({showCountry: !this.state.showCountry});
+    let country = this.props.countryList[i];
+    this.state.showCountry
+      ? this.setState({
+        country: country,
+        phone: country.code,
+        showCountry: !this.state.showCountry,
+      })
+      : this.setState({
+        country: country,
+        showCountry: !this.state.showCountry,
+      });
   }
 
   handlePhoneInput (e) {
@@ -125,7 +138,7 @@ class App extends Component {
            <span className="registration__label__span">ТЕЛЕФОН</span>
            <ul className="registration__input drop-list_country">
            { this.state.showCountry ?
-                this.state.countryList.map(function(el, i) {
+                this.props.countryList.map(function(el, i) {
                   return <li onClick={me.toggleCountry.bind(me, i)}
                           className="drop-list__item drop-list__item_country"
                           key={i}>
